@@ -8,7 +8,9 @@ abstract class BehaviorVersion
 {
     public const VERSION = [
         "1.12", BehaviorPack_1_12::class,
-        "1.16.0", "1.16.100", "1.17.0" => BehaviorPack_1_16::class,
+        "1.16.0" => BehaviorPack_1_16::class,
+        "1.16.100" => BehaviorPack_1_16::class,
+        "1.17" => BehaviorPack_1_16::class
     ];
 
     /**

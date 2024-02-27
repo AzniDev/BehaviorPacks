@@ -37,9 +37,10 @@ class BlockLoader
         if(!is_string($version)) throw new InvalidArgumentException("Invalid format version ($version)");
 
         if(!isset(BehaviorVersion::VERSION[$version])) throw new InvalidArgumentException("Invalid version ($version)");
+        $class = BehaviorVersion::VERSION[$version];
 
         /** @type BehaviorVersion $behaviorVersion */
-        $behaviorVersion = new (BehaviorVersion::VERSION[$version]());
+        $behaviorVersion = new $class();
         $this->behaviorPack->addVersion($behaviorVersion);
         $behaviorVersion->parseBlock($config);
     }

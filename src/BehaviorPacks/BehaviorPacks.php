@@ -3,6 +3,7 @@
 namespace BehaviorPacks;
 
 use BehaviorPacks\behaviorpacks\BehaviorPack;
+use BehaviorPacks\commands\BehaviorPackCommand;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
 use Symfony\Component\Filesystem\Path;
@@ -25,5 +26,15 @@ class BehaviorPacks extends PluginBase
                 $this->addons[strtolower($file)] = new BehaviorPack($file, $realpath);
             }
         }
+
+        $this->getServer()->getCommandMap()->register("behaviorpacks", new BehaviorPackCommand("behaviorpacks", "BehaviorPacks list"));
+    }
+
+    /**
+     * @return BehaviorPack[]
+     */
+    public function getAddons(): array
+    {
+        return $this->addons;
     }
 }

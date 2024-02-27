@@ -1,0 +1,9 @@
+name: BehaviorPacks
+main: BehaviorPacks\BehaviorPacks
+version: 1.0.0
+api: 5.0.0
+depend:
+  - Customies
+load: POSTWORLD
+authors:
+  - Zwuiix

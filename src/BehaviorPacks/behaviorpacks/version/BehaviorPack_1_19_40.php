@@ -3,6 +3,7 @@
 namespace BehaviorPacks\behaviorpacks\version;
 
 use BehaviorPacks\block\PermutableBlock;
+use customiesdevs\customies\block\BlockSize;
 use customiesdevs\customies\block\CustomiesBlockFactory;
 use customiesdevs\customies\block\Material;
 use customiesdevs\customies\block\Model;
@@ -12,11 +13,7 @@ use pocketmine\block\BlockBreakInfo;
 use pocketmine\block\BlockIdentifier;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\BlockTypeInfo;
-use pocketmine\crafting\ExactRecipeIngredient;
-use pocketmine\crafting\ShapedRecipe;
-use pocketmine\item\StringToItemParser;
 use pocketmine\math\Vector3;
-use pocketmine\Server;
 use pocketmine\utils\Config;
 
 class BehaviorPack_1_19_40 extends BehaviorVersion
@@ -71,29 +68,14 @@ class BehaviorPack_1_19_40 extends BehaviorVersion
 
             $geometry = $components["minecraft:geometry"] ?? null;
             if(is_string($geometry)) {
-                $model = new Model($materials, $geometry);
+                $entityCollision = $components["minecraft:entity_collision"] ?? null;
+                $origin = $entityCollision["origin"] ?? [-8, 0, -8];
+                $size = $entityCollision["size"] ?? [16, 16, 16];
 
-                $collisionBox = $components["minecraft:collision_box"] ?? null;
-                if(is_array($collisionBox)) {
-                    $origin = $collisionBox["origin"] ?? [-8, 0, -8];
-                    $size = $collisionBox["size"] ?? [16, 16, 16];
+                if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> origin");
+                if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> size");
 
-                    if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> origin");
-                    if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> size");
-
-                    $model->setCollisionBox(true, new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2]));
-                } else $model->setCollisionBox(true, new Vector3(-8, 0, -8), new Vector3(16, 16, 16));
-
-                $selectionCollision = $components["minecraft:selection_collision"] ?? null;
-                if(is_array($selectionCollision)) {
-                    $origin = $selectionCollision["origin"] ?? [-8, 0, -8];
-                    $size = $selectionCollision["size"] ?? [16, 16, 16];
-
-                    if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:pick_collision -> origin");
-                    if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:pick_collision -> size");
-
-                    $model->setSelectionBox(true, new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2]));
-                } else $model->setSelectionBox(true, new Vector3(-8, 0, -8), new Vector3(16, 16, 16));
+                $model = new Model($materials, $geometry, BlockSize::BC(new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2])));
             }
         }
 
@@ -101,7 +83,7 @@ class BehaviorPack_1_19_40 extends BehaviorVersion
         $model ??= null;
 
         $block = static fn() => (new PermutableBlock(new BlockIdentifier(BlockTypeIds::newId()), "Unknown", new BlockTypeInfo($breakInfo ?? BlockBreakInfo::instant())));
-        CustomiesBlockFactory::getInstance()->registerBlock($block, $identifier, $model, new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_NATURE, CreativeInventoryInfo::GROUP_MONSTER_STONE_EGG));
+        CustomiesBlockFactory::getInstance()->registerBlock($block, $identifier, $model, new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_ITEMS));
     }
 
     /**

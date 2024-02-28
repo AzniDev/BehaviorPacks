@@ -3,6 +3,7 @@
 namespace BehaviorPacks\behaviorpacks\version;
 
 use BehaviorPacks\block\PermutableBlock;
+use customiesdevs\customies\block\BlockSize;
 use customiesdevs\customies\block\CustomiesBlockFactory;
 use customiesdevs\customies\block\Material;
 use customiesdevs\customies\block\Model;
@@ -67,29 +68,14 @@ class BehaviorPack_1_16 extends BehaviorVersion
 
             $geometry = $components["minecraft:geometry"] ?? null;
             if(is_string($geometry)) {
-                $model = new Model($materials, $geometry);
-
                 $entityCollision = $components["minecraft:entity_collision"] ?? null;
-                if(is_array($entityCollision)) {
-                    $origin = $entityCollision["origin"] ?? [-8, 0, -8];
-                    $size = $entityCollision["size"] ?? [16, 16, 16];
+                $origin = $entityCollision["origin"] ?? [-8, 0, -8];
+                $size = $entityCollision["size"] ?? [16, 16, 16];
 
-                    if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> origin");
-                    if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> size");
+                if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> origin");
+                if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> size");
 
-                    $model->setCollisionBox(true, new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2]));
-                } else $model->setCollisionBox(true, new Vector3(-8, 0, -8), new Vector3(16, 16, 16));
-
-                $pickCollision = $components["minecraft:pick_collision"] ?? null;
-                if(is_array($pickCollision)) {
-                    $origin = $pickCollision["origin"] ?? [-8, 0, -8];
-                    $size = $pickCollision["size"] ?? [16, 16, 16];
-
-                    if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:pick_collision -> origin");
-                    if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:pick_collision -> size");
-
-                    $model->setSelectionBox(true, new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2]));
-                } else $model->setSelectionBox(true, new Vector3(-8, 0, -8), new Vector3(16, 16, 16));
+                $model = new Model($materials, $geometry, BlockSize::BC(new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2])));
             }
         }
 

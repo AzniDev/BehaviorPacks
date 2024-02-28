@@ -68,12 +68,12 @@ class BehaviorPack_1_19_40 extends BehaviorVersion
 
             $geometry = $components["minecraft:geometry"] ?? null;
             if(is_string($geometry)) {
-                $entityCollision = $components["minecraft:entity_collision"] ?? null;
-                $origin = $entityCollision["origin"] ?? [-8, 0, -8];
-                $size = $entityCollision["size"] ?? [16, 16, 16];
+                $collisionBox = $components["minecraft:collision_box"] ?? null;
+                $origin = $collisionBox["origin"] ?? [-8, 0, -8];
+                $size = $collisionBox["size"] ?? [16, 16, 16];
 
-                if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> origin");
-                if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:entity_collision -> size");
+                if(count($origin) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:collision_box -> origin");
+                if(count($size) !== 3) throw new InvalidArgumentException("Invalid minecraft:block -> components -> minecraft:collision_box -> size");
 
                 $model = new Model($materials, $geometry, BlockSize::BC(new Vector3($origin[0], $origin[1], $origin[2]), new Vector3($size[0], $size[1], $size[2])));
             }
